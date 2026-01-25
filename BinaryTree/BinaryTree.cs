@@ -3,22 +3,20 @@ A class to implement a binary tree with search methods.
 */
 
 public class BinaryTree<T> : IBinaryTree<T>
-    where T : notnull
+    where T : notnull, IComparable<T>
 {
-    private IBinaryTree<T>? _leftBranch;
-    private IBinaryTree<T>? _rightBranch;
-    public T Value;
+    protected IBinaryTree<T>? _leftBranch;
+    protected IBinaryTree<T>? _rightBranch;
+    protected Node<T> _node;
 
     public BinaryTree(T value)
     {
-        Value = value;
+        _node = new(value);
     }
 
-    public BinaryTree(T value, IBinaryTree<T>? leftBranch, IBinaryTree<T>? rightBranch)
+    public Node<T> GetNode()
     {
-        Value = value;
-        _leftBranch = leftBranch;
-        _rightBranch = rightBranch;
+        return _node;
     }
 
     public int GetMaxDepth()
@@ -35,16 +33,6 @@ public class BinaryTree<T> : IBinaryTree<T>
         return Math.Min(leftDepth, rightDepth) + 1;
     }
 
-    private IBinaryTree<T>? GetBranchWithSmallestMinDepth()
-    {
-        if (_leftBranch?.GetMinDepth() < _rightBranch?.GetMinDepth())
-        {
-            return _leftBranch;
-        }
-
-        return _rightBranch;
-    }
-
     public IBinaryTree<T>? GetLeftTree()
     {
         return _leftBranch;
@@ -55,26 +43,29 @@ public class BinaryTree<T> : IBinaryTree<T>
         return _rightBranch;
     }
 
+    /// <summary>
+    /// Size is the number of nodes in a tree
+    /// </summary>
+    /// <returns>An int indicating the size of the tree</returns>
     public int GetSize()
     {
         return 1 + (_leftBranch?.GetSize() ?? 0) + (_rightBranch?.GetSize() ?? 0);
     }
 
-    public bool CheckIfValueInTree(T value)
+    public bool Contains(T value)
     {
-        if (Value.Equals(value))
+        if (_node.Value.Equals(value))
         {
             return true;
         }
-        return (_leftBranch?.CheckIfValueInTree(value) ?? false)
-            || (_rightBranch?.CheckIfValueInTree(value) ?? false);
+        return (_leftBranch?.Contains(value) ?? false) || (_rightBranch?.Contains(value) ?? false);
     }
 
     /// <summary>
-    /// By default, we will try to insert values on the smallest branch.
+    /// By default, if we have a free branch, we add our node.
+    /// If we don't, we pass on the value to the left branch.
     /// </summary>
-    /// <param name="value">value to insert in our binary tree</param>
-    /// <returns>A boolean to indicate if the operation was successful.</returns>
+    /// <param name="value">The value to insert inside our BinaryTree</param>
     public virtual void AddNode(T value)
     {
         if (_leftBranch is null)
@@ -89,7 +80,12 @@ public class BinaryTree<T> : IBinaryTree<T>
             return;
         }
 
-        GetBranchWithSmallestMinDepth()?.AddNode(value);
+        _leftBranch.AddNode(value);
+    }
+
+    public virtual bool RemoveNode()
+    {
+        return false;
     }
 
     // ToDo
@@ -124,6 +120,21 @@ public class BinaryTree<T> : IBinaryTree<T>
 
     public virtual bool IsBinarySearchTree()
     {
-        return false;
+        return (_leftBranch?.IsBinarySearchTree() ?? true)
+            && (_rightBranch?.IsBinarySearchTree() ?? true);
+    }
+
+    private bool CheckIfValueInInterval(T? minValue, T? maxValue)
+    {
+        if (_node.Value.CompareTo(minValue) < 0 || _node.Value.CompareTo(maxValue) > 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public int CompareTo(T? other)
+    {
+        return _node.Value.CompareTo(other);
     }
 }

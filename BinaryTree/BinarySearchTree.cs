@@ -2,36 +2,38 @@
 A class to implement a binary search tree.
 */
 
-public class BinarySearchTree : BinaryTree<int>
+public class BinarySearchTree<T> : BinaryTree<T>
+    where T : notnull, IComparable<T>
 {
-    private BinarySearchTree? _leftBranch;
-    private BinarySearchTree? _rightBranch;
-
-    public BinarySearchTree(int value)
+    public BinarySearchTree(T value)
         : base(value) { }
 
-    private bool CheckBranchValidity(BinarySearchTree? binarySearchTree, Branch branch)
+    public override void AddNode(T value)
     {
-        if (binarySearchTree is null)
+        if ((value.CompareTo(_node.Value) <= 0) && (_leftBranch is null))
         {
-            return true;
+            _leftBranch = new BinarySearchTree<T>(value);
+            return;
         }
 
-        if (branch == Branch.Left)
+        if ((value.CompareTo(_node.Value) > 0) && (_rightBranch is null))
         {
-            return binarySearchTree.Value < Value;
+            _rightBranch = new BinarySearchTree<T>(value);
+            return;
         }
 
-        if (branch == Branch.Right)
+        if ((value.CompareTo(_node.Value) <= 0) && (_leftBranch is not null))
         {
-            return binarySearchTree.Value > Value;
+            _leftBranch.AddNode(value);
+            return;
         }
 
-        return false;
-    }
+        if ((value.CompareTo(_node.Value) > 0) && (_rightBranch is not null))
+        {
+            _rightBranch.AddNode(value);
+            return;
+        }
 
-    public override bool IsBinarySearchTree()
-    {
-        return true;
+        throw new Exception($"Couldn't manage to insert value {value}.");
     }
 }
