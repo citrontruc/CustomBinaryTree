@@ -36,4 +36,25 @@ public class BinarySearchTree<T> : BinaryTree<T>
 
         throw new Exception($"Couldn't manage to insert value {value}.");
     }
+
+    public override bool Contains(T value)
+    {
+        int comparisonValue = _node.Value.CompareTo(value);
+        if (comparisonValue == 0)
+        {
+            return true;
+        }
+
+        if (comparisonValue < 0 && _leftBranch is not null)
+        {
+            return _leftBranch.Contains(value);
+        }
+
+        if (comparisonValue > 0 && _rightBranch is not null)
+        {
+            return _rightBranch.Contains(value);
+        }
+
+        return false;
+    }
 }

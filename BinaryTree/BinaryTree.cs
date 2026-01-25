@@ -52,13 +52,49 @@ public class BinaryTree<T> : IBinaryTree<T>
         return 1 + (_leftBranch?.GetSize() ?? 0) + (_rightBranch?.GetSize() ?? 0);
     }
 
-    public bool Contains(T value)
+    /// <summary>
+    /// Checks if a tree containst the given value.
+    /// Uses a recursive technique.
+    /// </summary>
+    /// <param name="value">the value to check for</param>
+    /// <returns> A boolean indicating if the is value in the tree</returns>
+    public virtual bool Contains(T value)
     {
         if (_node.Value.Equals(value))
         {
             return true;
         }
         return (_leftBranch?.Contains(value) ?? false) || (_rightBranch?.Contains(value) ?? false);
+    }
+
+    /// <summary>
+    /// An iterative version of the contains method. Checks each element one after another.
+    /// Since we check all the elements in our tree one after another, our complexity is N.
+    /// </summary>
+    /// <param name="value"> The value we are looking for.</param>
+    /// <returns>A boolean indicating if we have found the correct value.</returns>
+    public bool IterativeContains(T value)
+    {
+        Queue<IBinaryTree<T>?> branchesToExplore = new();
+        branchesToExplore.Enqueue(_leftBranch);
+        branchesToExplore.Enqueue(_rightBranch);
+
+        while (branchesToExplore.Count() > 0)
+        {
+            IBinaryTree<T>? branch = branchesToExplore.Dequeue();
+            if (branch?.GetNode().Value.Equals(value) ?? false)
+            {
+                return true;
+            }
+
+            if (branch is not null)
+            {
+                branchesToExplore.Enqueue(branch?.GetLeftTree());
+                branchesToExplore.Enqueue(branch?.GetRightTree());
+            }
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -83,6 +119,7 @@ public class BinaryTree<T> : IBinaryTree<T>
         _leftBranch.AddNode(value);
     }
 
+    // ToDO
     public virtual bool RemoveNode()
     {
         return false;
@@ -100,37 +137,88 @@ public class BinaryTree<T> : IBinaryTree<T>
         return false;
     }
 
-    // ToDo
     public List<T> PreOrderTraversal()
     {
-        return new();
+        List<T> result = new();
+        result.Add(_node.Value);
+
+        if (_leftBranch is not null)
+        {
+            result.AddRange(_leftBranch.PreOrderTraversal());
+        }
+
+        if (_rightBranch is not null)
+        {
+            result.AddRange(_rightBranch.PreOrderTraversal());
+        }
+        return result;
     }
 
-    // ToDo
     public List<T> InOrderTraversal()
     {
-        return new();
+        List<T> result = new();
+
+        if (_leftBranch is not null)
+        {
+            result.AddRange(_leftBranch.PreOrderTraversal());
+        }
+
+        result.Add(_node.Value);
+
+        if (_rightBranch is not null)
+        {
+            result.AddRange(_rightBranch.PreOrderTraversal());
+        }
+        return result;
     }
 
-    // ToDo
     public List<T> PostOrderTraversal()
     {
-        return new();
+        List<T> result = new();
+
+        if (_leftBranch is not null)
+        {
+            result.AddRange(_leftBranch.PreOrderTraversal());
+        }
+
+        if (_rightBranch is not null)
+        {
+            result.AddRange(_rightBranch.PreOrderTraversal());
+        }
+
+        result.Add(_node.Value);
+
+        return result;
     }
 
-    public virtual bool IsBinarySearchTree()
+    public bool IsBalanced()
     {
-        return (_leftBranch?.IsBinarySearchTree() ?? true)
-            && (_rightBranch?.IsBinarySearchTree() ?? true);
+        return GetMaxDepth() - GetMinDepth() <= 1;
     }
 
-    private bool CheckIfValueInInterval(T? minValue, T? maxValue)
+    public bool IsBinarySearchTree()
     {
-        if (_node.Value.CompareTo(minValue) < 0 || _node.Value.CompareTo(maxValue) > 0)
+        return IsBinarySearchTree(default, default);
+    }
+
+    public bool IsBinarySearchTree(T? minValue, T? maxValue)
+    {
+        if (_leftBranch is null && _rightBranch is null)
+        {
+            return true;
+        }
+
+        if (minValue is not null && _node.Value.CompareTo(minValue) < 0)
         {
             return false;
         }
-        return true;
+
+        if (maxValue is not null && _node.Value.CompareTo(maxValue) > 0)
+        {
+            return false;
+        }
+        return (_leftBranch?.IsBinarySearchTree(minValue, _node.Value) ?? true)
+            && (_rightBranch?.IsBinarySearchTree(_node.Value, maxValue) ?? true);
     }
 
     public int CompareTo(T? other)

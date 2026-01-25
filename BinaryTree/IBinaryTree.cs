@@ -25,5 +25,7 @@ public interface IBinaryTree<T> : IComparable<T>
     public List<T> PreOrderTraversal();
     public List<T> InOrderTraversal();
     public List<T> PostOrderTraversal();
+    public bool IsBalanced();
     public bool IsBinarySearchTree();
+    public bool IsBinarySearchTree(T? minValue, T? maxValue);
 }
