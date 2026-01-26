@@ -16,4 +16,8 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BinaryTree\CustomBinaryTree.csproj" />
+  </ItemGroup>
 </Project>

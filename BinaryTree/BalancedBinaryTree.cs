@@ -69,40 +69,28 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
 
     public override bool RemoveNode()
     {
-        if (_leftBranch is null && _rightBranch is null) { }
         return false;
     }
 
     public override bool RemoveFirstNodeWithValue(T value)
     {
-        if (_node.Value.Equals(value))
-        {
-            return RemoveNode();
-        }
-
-        if (_leftBranch?.RemoveFirstNodeWithValue(value) ?? false)
-        {
-            return true;
-        }
-
-        if (_rightBranch?.RemoveFirstNodeWithValue(value) ?? false)
-        {
-            return true;
-        }
-
         return false;
     }
 
     public override bool RemoveAllNodesWithValue(T value)
     {
-        if (_node.Value.Equals(value))
-        {
-            RemoveNode();
-            return _parentBranch?.RemoveAllNodesWithValue(value) ?? true;
-        }
-
         return (_leftBranch?.RemoveAllNodesWithValue(value) ?? true)
             && (_rightBranch?.RemoveAllNodesWithValue(value) ?? true);
+    }
+
+    public bool Rebalance()
+    {
+        if (IsBalanced())
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private void ThrowInsertionError()
