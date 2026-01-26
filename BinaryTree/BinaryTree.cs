@@ -5,13 +5,19 @@ A class to implement a binary tree with search methods.
 public class BinaryTree<T> : IBinaryTree<T>
     where T : notnull, IComparable<T>
 {
-    protected IBinaryTree<T>? _leftBranch;
-    protected IBinaryTree<T>? _rightBranch;
+    protected BinaryTree<T>? _parentBranch;
+    protected BinaryTree<T>? _leftBranch;
+    protected BinaryTree<T>? _rightBranch;
     protected Node<T> _node;
 
     public BinaryTree(T value)
     {
         _node = new(value);
+    }
+
+    protected virtual BinaryTree<T> CreateNode(T value)
+    {
+        return new BinaryTree<T>(value);
     }
 
     public Node<T> GetNode()
@@ -41,6 +47,46 @@ public class BinaryTree<T> : IBinaryTree<T>
     public IReadOnlyBinaryTree<T>? GetRightBranch()
     {
         return _rightBranch;
+    }
+
+    private void SetLeftBranch(BinaryTree<T>? leftBranch)
+    {
+        _leftBranch = leftBranch;
+    }
+
+    private void SetRightBranch(BinaryTree<T>? rightBranch)
+    {
+        _rightBranch = rightBranch;
+    }
+
+    private void SetParentBranch(BinaryTree<T>? parentBranch)
+    {
+        _parentBranch = parentBranch;
+    }
+
+    private BinaryTree<T> GetDeepestBranch()
+    {
+        if (_leftBranch is null && _rightBranch is null)
+        {
+            return this;
+        }
+
+        bool leftBranchIsDeeper =
+            (_leftBranch?.GetMaxDepth() ?? 0) > (_rightBranch?.GetMaxDepth() ?? 0);
+
+        if (_leftBranch is not null && leftBranchIsDeeper)
+        {
+            return _leftBranch.GetDeepestBranch();
+        }
+
+        if (_rightBranch is not null && !leftBranchIsDeeper)
+        {
+            return _rightBranch.GetDeepestBranch();
+        }
+
+        throw new Exception(
+            "Something went wrong when trying to Get the deepest branch of the tree."
+        );
     }
 
     /// <summary>
@@ -119,10 +165,19 @@ public class BinaryTree<T> : IBinaryTree<T>
         _leftBranch.AddNode(value);
     }
 
-    // ToDO
+    /// <summary>
+    /// We take the rightmost, deepest node and use it to replace the node we are going to replace.
+    /// </summary>
+    /// <returns>A boolean indicating if the operation was successful</returns>
     public virtual bool RemoveNode()
     {
-        return false;
+        BinaryTree<T> branch = GetDeepestBranch();
+        branch.SetParentBranch(_parentBranch);
+        _leftBranch?.SetParentBranch(branch);
+        _rightBranch?.SetParentBranch(branch);
+        branch.SetLeftBranch(_leftBranch);
+        branch.SetRightBranch(_rightBranch);
+        return true;
     }
 
     /// <summary>
@@ -155,6 +210,7 @@ public class BinaryTree<T> : IBinaryTree<T>
         if (_node.Value.Equals(value))
         {
             RemoveNode();
+            return _parentBranch?.RemoveAllNodesWithValue(value) ?? true;
         }
 
         return (_leftBranch?.RemoveAllNodesWithValue(value) ?? true)

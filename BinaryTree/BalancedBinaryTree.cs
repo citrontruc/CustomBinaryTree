@@ -8,6 +8,11 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
     public BalancedBinaryTree(T value)
         : base(value) { }
 
+    protected override BalancedBinaryTree<T> CreateNode(T value)
+    {
+        return new BalancedBinaryTree<T>(value);
+    }
+
     /// <summary>
     /// By default, we will try to insert values on the smallest branch.
     /// </summary>
@@ -17,13 +22,13 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
     {
         if (_leftBranch is null)
         {
-            _leftBranch = new BalancedBinaryTree<T>(value);
+            _leftBranch = CreateNode(value);
             return;
         }
 
         if (_rightBranch is null)
         {
-            _rightBranch = new BalancedBinaryTree<T>(value);
+            _rightBranch = CreateNode(value);
             return;
         }
 

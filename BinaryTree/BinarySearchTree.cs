@@ -8,17 +8,22 @@ public class BinarySearchTree<T> : BinaryTree<T>
     public BinarySearchTree(T value)
         : base(value) { }
 
+    protected override BinarySearchTree<T> CreateNode(T value)
+    {
+        return new BinarySearchTree<T>(value);
+    }
+
     public override void AddNode(T value)
     {
         if ((value.CompareTo(_node.Value) <= 0) && (_leftBranch is null))
         {
-            _leftBranch = new BinarySearchTree<T>(value);
+            _leftBranch = CreateNode(value);
             return;
         }
 
         if ((value.CompareTo(_node.Value) > 0) && (_rightBranch is null))
         {
-            _rightBranch = new BinarySearchTree<T>(value);
+            _rightBranch = CreateNode(value);
             return;
         }
 
