@@ -22,6 +22,7 @@ public interface IReadOnlyBinaryTree<T> : IComparable<T>
     public int GetMinDepth();
     public IReadOnlyBinaryTree<T>? GetLeftBranch();
     public IReadOnlyBinaryTree<T>? GetRightBranch();
+    public IReadOnlyBinaryTree<T>? GetParent();
     public bool Contains(T value);
     public List<T> PreOrderTraversal();
     public List<T> InOrderTraversal();

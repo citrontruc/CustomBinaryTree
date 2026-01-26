@@ -49,6 +49,11 @@ public class BinaryTree<T> : IBinaryTree<T>
         return _rightBranch;
     }
 
+    public IReadOnlyBinaryTree<T>? GetParent()
+    {
+        return _parentBranch;
+    }
+
     protected virtual void SetLeftBranch(BinaryTree<T>? leftBranch)
     {
         _leftBranch = leftBranch;
@@ -167,6 +172,23 @@ public class BinaryTree<T> : IBinaryTree<T>
         _leftBranch.AddNode(value);
     }
 
+    protected virtual void CutTiesWithChild(BinaryTree<T> child)
+    {
+        if (_leftBranch == child)
+        {
+            _leftBranch = default;
+            return;
+        }
+
+        if (_rightBranch == child)
+        {
+            _rightBranch = default;
+            return;
+        }
+
+        throw new Exception("Could not find the requested branch in children");
+    }
+
     /// <summary>
     /// We take the rightmost, deepest node and use it to replace the node we are going to replace.
     /// </summary>
@@ -174,7 +196,10 @@ public class BinaryTree<T> : IBinaryTree<T>
     public virtual bool RemoveNode()
     {
         BinaryTree<T> branch = GetDeepestBranch();
+        // Change parent branch
+        branch._parentBranch?.CutTiesWithChild(branch);
         branch.SetParentBranch(_parentBranch);
+        // Change children
         _leftBranch?.SetParentBranch(branch);
         _rightBranch?.SetParentBranch(branch);
         branch.SetLeftBranch(_leftBranch);

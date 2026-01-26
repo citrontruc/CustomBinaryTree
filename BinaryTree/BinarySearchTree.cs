@@ -92,6 +92,53 @@ public class BinarySearchTree<T> : BinaryTree<T>
         return false;
     }
 
+    // TODO
+    public override bool RemoveNode()
+    {
+        return false;
+    }
+
+    public override bool RemoveFirstNodeWithValue(T value)
+    {
+        if (_node.Value.Equals(value))
+        {
+            return RemoveNode();
+        }
+
+        if (_leftBranch is not null && _leftBranch.CompareTo(value) >= 0)
+        {
+            return ((BinarySearchTree<T>)_leftBranch).RemoveFirstNodeWithValue(value);
+        }
+
+        if (_rightBranch is not null && _rightBranch.CompareTo(value) <= 0)
+        {
+            return ((BinarySearchTree<T>)_rightBranch).RemoveFirstNodeWithValue(value);
+        }
+
+        return false;
+    }
+
+    public override bool RemoveAllNodesWithValue(T value)
+    {
+        if (_node.Value.Equals(value))
+        {
+            RemoveNode();
+            return ((BinarySearchTree<T>?)_parentBranch)?.RemoveAllNodesWithValue(value) ?? true;
+        }
+
+        if (_leftBranch is not null && _leftBranch.CompareTo(value) >= 0)
+        {
+            return ((BinarySearchTree<T>)_leftBranch).RemoveAllNodesWithValue(value);
+        }
+
+        if (_rightBranch is not null && _rightBranch.CompareTo(value) <= 0)
+        {
+            return ((BinarySearchTree<T>)_rightBranch).RemoveAllNodesWithValue(value);
+        }
+
+        return false;
+    }
+
     private void ThrowInsertionError()
     {
         throw new Exception(
