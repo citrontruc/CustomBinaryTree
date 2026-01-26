@@ -60,22 +60,22 @@ public class BinaryTree<T>
     /// <returns>A boolean indicating if we have found the correct value.</returns>
     public bool IterativeContains(T value)
     {
-        Queue<Node<T>?> branchesToExplore = new();
-        branchesToExplore.Enqueue(_node.leftNode);
-        branchesToExplore.Enqueue(_node.rightNode);
+        Queue<Node<T>?> nodesToExplore = new();
+        nodesToExplore.Enqueue(_node.leftNode);
+        nodesToExplore.Enqueue(_node.rightNode);
 
-        while (branchesToExplore.Count() > 0)
+        while (nodesToExplore.Count() > 0)
         {
-            Node<T>? branch = branchesToExplore.Dequeue();
-            if (branch?.Value.Equals(value) ?? false)
+            Node<T>? node = nodesToExplore.Dequeue();
+            if (node?.Value.Equals(value) ?? false)
             {
                 return true;
             }
 
-            if (branch is not null)
+            if (node is not null)
             {
-                branchesToExplore.Enqueue(branch.leftNode);
-                branchesToExplore.Enqueue(branch.rightNode);
+                nodesToExplore.Enqueue(node.leftNode);
+                nodesToExplore.Enqueue(node.rightNode);
             }
         }
 
@@ -148,9 +148,9 @@ public class BinaryTree<T>
         return _node.PostOrderTraversal();
     }
 
-    public List<T> DepthFirstSearch()
+    public List<T> BreadthFirstSearch()
     {
-        return _node.DepthFirstSearch();
+        return _node.BreadthFirstSearch();
     }
 
     public bool IsBalanced()

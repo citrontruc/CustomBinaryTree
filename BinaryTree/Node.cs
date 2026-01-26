@@ -132,10 +132,23 @@ public class Node<T>
         return result;
     }
 
-    // TODO
-    public List<T> DepthFirstSearch()
+    public List<T> BreadthFirstSearch()
     {
-        return new();
+        List<T> result = new();
+        Queue<Node<T>?> nodesToExplore = new();
+        nodesToExplore.Enqueue(this);
+
+        while (nodesToExplore.Count() > 0)
+        {
+            Node<T>? node = nodesToExplore.Dequeue();
+            if (node is not null)
+            {
+                result.Add(node.Value);
+                nodesToExplore.Enqueue(node.leftNode);
+                nodesToExplore.Enqueue(node.rightNode);
+            }
+        }
+        return result;
     }
 
     public bool IsBalanced()
