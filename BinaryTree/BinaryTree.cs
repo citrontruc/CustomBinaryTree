@@ -49,17 +49,17 @@ public class BinaryTree<T> : IBinaryTree<T>
         return _rightBranch;
     }
 
-    private void SetLeftBranch(BinaryTree<T>? leftBranch)
+    protected virtual void SetLeftBranch(BinaryTree<T>? leftBranch)
     {
         _leftBranch = leftBranch;
     }
 
-    private void SetRightBranch(BinaryTree<T>? rightBranch)
+    protected virtual void SetRightBranch(BinaryTree<T>? rightBranch)
     {
         _rightBranch = rightBranch;
     }
 
-    private void SetParentBranch(BinaryTree<T>? parentBranch)
+    protected virtual void SetParentBranch(BinaryTree<T>? parentBranch)
     {
         _parentBranch = parentBranch;
     }
@@ -152,13 +152,15 @@ public class BinaryTree<T> : IBinaryTree<T>
     {
         if (_leftBranch is null)
         {
-            _leftBranch = new BinaryTree<T>(value);
+            _leftBranch = CreateNode(value);
+            _leftBranch.SetParentBranch(this);
             return;
         }
 
         if (_rightBranch is null)
         {
-            _rightBranch = new BinaryTree<T>(value);
+            _rightBranch = CreateNode(value);
+            _rightBranch.SetParentBranch(this);
             return;
         }
 

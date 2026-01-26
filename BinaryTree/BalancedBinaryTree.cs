@@ -8,9 +8,36 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
     public BalancedBinaryTree(T value)
         : base(value) { }
 
-    protected override BalancedBinaryTree<T> CreateNode(T value)
+    protected override BinaryTree<T> CreateNode(T value)
     {
         return new BalancedBinaryTree<T>(value);
+    }
+
+    protected override void SetLeftBranch(BinaryTree<T>? leftBranch)
+    {
+        if (leftBranch is null || leftBranch is not BalancedBinaryTree<T>)
+        {
+            ThrowInsertionError();
+        }
+        _leftBranch = leftBranch;
+    }
+
+    protected override void SetRightBranch(BinaryTree<T>? rightBranch)
+    {
+        if (rightBranch is null || rightBranch is not BalancedBinaryTree<T>)
+        {
+            ThrowInsertionError();
+        }
+        _rightBranch = rightBranch;
+    }
+
+    protected override void SetParentBranch(BinaryTree<T>? parentBranch)
+    {
+        if (parentBranch is null || parentBranch is not BalancedBinaryTree<T>)
+        {
+            ThrowInsertionError();
+        }
+        _parentBranch = parentBranch;
     }
 
     /// <summary>
@@ -34,9 +61,16 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
 
         if (_leftBranch.GetMinDepth() < _rightBranch.GetMinDepth())
         {
-            _leftBranch.AddNode(value);
+            ((BalancedBinaryTree<T>)_leftBranch).AddNode(value);
             return;
         }
-        _rightBranch.AddNode(value);
+        ((BalancedBinaryTree<T>)_rightBranch).AddNode(value);
+    }
+
+    private void ThrowInsertionError()
+    {
+        throw new Exception(
+            "You tried to insert a regular binary tree branch on a balanced binary tree"
+        );
     }
 }
