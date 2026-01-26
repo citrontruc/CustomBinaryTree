@@ -33,12 +33,12 @@ public class BinaryTree<T> : IBinaryTree<T>
         return Math.Min(leftDepth, rightDepth) + 1;
     }
 
-    public IBinaryTree<T>? GetLeftTree()
+    public IReadOnlyBinaryTree<T>? GetLeftBranch()
     {
         return _leftBranch;
     }
 
-    public IBinaryTree<T>? GetRightTree()
+    public IReadOnlyBinaryTree<T>? GetRightBranch()
     {
         return _rightBranch;
     }
@@ -75,13 +75,13 @@ public class BinaryTree<T> : IBinaryTree<T>
     /// <returns>A boolean indicating if we have found the correct value.</returns>
     public bool IterativeContains(T value)
     {
-        Queue<IBinaryTree<T>?> branchesToExplore = new();
+        Queue<IReadOnlyBinaryTree<T>?> branchesToExplore = new();
         branchesToExplore.Enqueue(_leftBranch);
         branchesToExplore.Enqueue(_rightBranch);
 
         while (branchesToExplore.Count() > 0)
         {
-            IBinaryTree<T>? branch = branchesToExplore.Dequeue();
+            IReadOnlyBinaryTree<T>? branch = branchesToExplore.Dequeue();
             if (branch?.GetNode().Value.Equals(value) ?? false)
             {
                 return true;
@@ -89,8 +89,8 @@ public class BinaryTree<T> : IBinaryTree<T>
 
             if (branch is not null)
             {
-                branchesToExplore.Enqueue(branch?.GetLeftTree());
-                branchesToExplore.Enqueue(branch?.GetRightTree());
+                branchesToExplore.Enqueue(branch?.GetLeftBranch());
+                branchesToExplore.Enqueue(branch?.GetRightBranch());
             }
         }
 
@@ -125,16 +125,40 @@ public class BinaryTree<T> : IBinaryTree<T>
         return false;
     }
 
-    // ToDo
+    /// <summary>
+    /// Remove first node with value will remove the leftmost value first.
+    /// </summary>
+    /// <param name="value">value to remove.</param>
+    /// <returns>A boolean indicating if the value was successful.</returns>
     public virtual bool RemoveFirstNodeWithValue(T value)
     {
+        if (_node.Value.Equals(value))
+        {
+            return RemoveNode();
+        }
+
+        if (_leftBranch?.RemoveFirstNodeWithValue(value) ?? false)
+        {
+            return true;
+        }
+
+        if (_rightBranch?.RemoveFirstNodeWithValue(value) ?? false)
+        {
+            return true;
+        }
+
         return false;
     }
 
-    // ToDo
     public virtual bool RemoveAllNodesWithValue(T value)
     {
-        return false;
+        if (_node.Value.Equals(value))
+        {
+            RemoveNode();
+        }
+
+        return (_leftBranch?.RemoveAllNodesWithValue(value) ?? true)
+            && (_rightBranch?.RemoveAllNodesWithValue(value) ?? true);
     }
 
     public List<T> PreOrderTraversal()
@@ -160,14 +184,14 @@ public class BinaryTree<T> : IBinaryTree<T>
 
         if (_leftBranch is not null)
         {
-            result.AddRange(_leftBranch.PreOrderTraversal());
+            result.AddRange(_leftBranch.InOrderTraversal());
         }
 
         result.Add(_node.Value);
 
         if (_rightBranch is not null)
         {
-            result.AddRange(_rightBranch.PreOrderTraversal());
+            result.AddRange(_rightBranch.InOrderTraversal());
         }
         return result;
     }
@@ -178,17 +202,23 @@ public class BinaryTree<T> : IBinaryTree<T>
 
         if (_leftBranch is not null)
         {
-            result.AddRange(_leftBranch.PreOrderTraversal());
+            result.AddRange(_leftBranch.PostOrderTraversal());
         }
 
         if (_rightBranch is not null)
         {
-            result.AddRange(_rightBranch.PreOrderTraversal());
+            result.AddRange(_rightBranch.PostOrderTraversal());
         }
 
         result.Add(_node.Value);
 
         return result;
+    }
+
+    // TODO
+    public List<T> DepthFirstSearch()
+    {
+        return new();
     }
 
     public bool IsBalanced()
