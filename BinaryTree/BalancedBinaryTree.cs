@@ -56,48 +56,30 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
         {
             return false;
         }
-        if (_node.Value.Equals(value))
+        bool comparisonValue =
+            (_node.leftNode?.GetMinDepth() ?? 0) >= (_node.rightNode?.GetMinDepth() ?? 0);
+        (Node<T> replacementNode, Node<T> replacementParentNode, bool isLeftNode) = comparisonValue
+            ? FindReplacementNodeForRemoval(_node.leftNode, _node, true)
+            : FindReplacementNodeForRemoval(_node.rightNode, _node, false);
+        replacementParentNode.leftNode = isLeftNode ? null : replacementParentNode.leftNode;
+        replacementParentNode.rightNode = isLeftNode ? replacementParentNode.rightNode : null;
+
+        if (replacementNode.Value.Equals(value))
         {
-            if (_node.HasNoChildNode)
-            {
-                _node = null;
-                return true;
-            }
-            if (_node.HasTwoChildrenNode)
-            {
-                (Node<T> replacementNode, Node<T> replacementParentNode) =
-                    FindReplacementNodeForRemoval(_node.rightNode, _node);
-                if (replacementParentNode != _node)
-                {
-                    replacementParentNode.leftNode = replacementNode.rightNode;
-                    replacementNode.rightNode = _node.rightNode;
-                }
-                replacementNode.leftNode = _node.leftNode;
-                _node = replacementNode;
-                return true;
-            }
-            if (_node.leftNode is not null)
-            {
-                _node = _node.leftNode;
-                return true;
-            }
-            if (_node.rightNode is not null)
-            {
-                _node = _node.rightNode;
-                return true;
-            }
+            return true;
         }
 
-        if (_node.Value.CompareTo(value) >= 0)
+        if (RemoveFirstNodeWithValue(_node.rightNode, _node, replacementNode, value, false))
         {
-            return RemoveFirstNodeWithValue(_node.leftNode, _node, value, true);
+            return true;
         }
-        return RemoveFirstNodeWithValue(_node.rightNode, _node, value, false);
+        return RemoveFirstNodeWithValue(_node.leftNode, _node, replacementNode, value, true);
     }
 
-    protected override bool RemoveFirstNodeWithValue(
+    protected virtual bool RemoveFirstNodeWithValue(
         Node<T>? currentNode,
         Node<T> parentNode,
+        Node<T> replacementNode,
         T value,
         bool isLeftNode
     )
@@ -109,44 +91,43 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
 
         if (currentNode.Value.Equals(value))
         {
-            Node<T>? replacementNode = null;
-            if (currentNode.HasNoChildNode) { }
-            else if (currentNode.HasTwoChildrenNode)
+            replacementNode.leftNode = currentNode.leftNode;
+            replacementNode.rightNode = currentNode.rightNode;
+            if (isLeftNode)
             {
-                (replacementNode, Node<T> replacementParentNode) = FindReplacementNodeForRemoval(
-                    currentNode.rightNode,
-                    currentNode
-                );
-                if (replacementParentNode != currentNode)
-                {
-                    replacementParentNode.leftNode = replacementNode.rightNode;
-                    replacementNode.rightNode = currentNode.rightNode;
-                }
-                replacementNode.leftNode = currentNode.leftNode;
+                parentNode.leftNode = replacementNode;
             }
-            else if (currentNode.leftNode is not null)
+            else
             {
-                replacementNode = currentNode.leftNode;
+                parentNode.rightNode = replacementNode;
             }
-            else if (currentNode.rightNode is not null)
-            {
-                replacementNode = currentNode.rightNode;
-            }
-            parentNode.leftNode = isLeftNode ? replacementNode : parentNode.leftNode;
-            parentNode.rightNode = isLeftNode ? parentNode.rightNode : replacementNode;
             return true;
         }
-
-        if (currentNode.Value.CompareTo(value) >= 0)
+        if (
+            RemoveFirstNodeWithValue(
+                currentNode.leftNode,
+                currentNode,
+                replacementNode,
+                value,
+                true
+            )
+        )
         {
-            return RemoveFirstNodeWithValue(currentNode.leftNode, currentNode, value, true);
+            return true;
         }
-        return RemoveFirstNodeWithValue(currentNode.rightNode, currentNode, value, false);
+        return RemoveFirstNodeWithValue(
+            currentNode.rightNode,
+            currentNode,
+            replacementNode,
+            value,
+            false
+        );
     }
 
-    protected override (Node<T>, Node<T>) FindReplacementNodeForRemoval(
+    protected virtual (Node<T>, Node<T>, bool) FindReplacementNodeForRemoval(
         Node<T>? currentNode,
-        Node<T> parent
+        Node<T> parent,
+        bool isLeftNode
     )
     {
         if (currentNode is null)
@@ -154,11 +135,15 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
             throw new ArgumentException("Cannot find replacement with an empty tree");
         }
 
-        if (currentNode.leftNode is not null)
+        if (currentNode.HasNoChildNode)
         {
-            return FindReplacementNodeForRemoval(currentNode.leftNode, currentNode);
+            return (currentNode, parent, isLeftNode);
         }
 
-        return (currentNode, parent);
+        return
+            (currentNode.leftNode?.GetMinDepth() ?? 0)
+            >= (currentNode.rightNode?.GetMinDepth() ?? 0)
+            ? FindReplacementNodeForRemoval(currentNode.leftNode, currentNode, true)
+            : FindReplacementNodeForRemoval(currentNode.rightNode, currentNode, false);
     }
 }

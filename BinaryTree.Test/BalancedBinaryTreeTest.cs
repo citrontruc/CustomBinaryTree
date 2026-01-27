@@ -106,4 +106,72 @@ public class BalancedBinaryTreeTest
         // Assert
         Assert.True(isBalanced);
     }
+
+    #region RemoveNode
+    [Fact]
+    public void RemoveNode_OnNodeWithTwoChildren_RemainsBinaryBalancedTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BalancedBinaryTree<int> balancedBinaryTree = new(root);
+        balancedBinaryTree.AddNode(3);
+        balancedBinaryTree.AddNode(4);
+        balancedBinaryTree.AddNode(2);
+        balancedBinaryTree.AddNode(6);
+        balancedBinaryTree.AddNode(8);
+        balancedBinaryTree.AddNode(7);
+
+        // Act
+        int value = 3;
+        balancedBinaryTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(balancedBinaryTree.Contains(value));
+        Assert.True(balancedBinaryTree.IsBalanced());
+    }
+
+    [Fact]
+    public void RemoveNode_OnNodeWithOnlyRightChild_RemainsBinaryBalancedTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BalancedBinaryTree<int> balancedBinaryTree = new(root);
+        balancedBinaryTree.AddNode(3);
+        balancedBinaryTree.AddNode(4);
+        balancedBinaryTree.AddNode(2);
+        balancedBinaryTree.AddNode(6);
+        balancedBinaryTree.AddNode(8);
+        balancedBinaryTree.AddNode(7);
+
+        // Act
+        int value = 6;
+        balancedBinaryTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(balancedBinaryTree.Contains(value));
+        Assert.True(balancedBinaryTree.IsBalanced());
+    }
+
+    [Fact]
+    public void RemoveNode_OnNodeWithOnlyLeftChild_RemainsBinaryBalancedTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BalancedBinaryTree<int> balancedBinaryTree = new(root);
+        balancedBinaryTree.AddNode(3);
+        balancedBinaryTree.AddNode(4);
+        balancedBinaryTree.AddNode(2);
+        balancedBinaryTree.AddNode(6);
+        balancedBinaryTree.AddNode(8);
+        balancedBinaryTree.AddNode(7);
+
+        // Act
+        int value = 8;
+        balancedBinaryTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(balancedBinaryTree.Contains(value));
+        Assert.True(balancedBinaryTree.IsBalanced());
+    }
+    #endregion
 }
