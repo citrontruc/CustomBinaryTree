@@ -82,11 +82,106 @@ public class BinarySearchTree<T> : BinaryTree<T>
         {
             return false;
         }
-        return RemoveFirstNodeWithValue(_node, value);
+        if (_node.Value.Equals(value))
+        {
+            if (_node.HasNoChildNode)
+            {
+                _node = null;
+                return true;
+            }
+            if (_node.HasTwoChildrenNode)
+            {
+                (Node<T> replacementNode, Node<T> replacementParentNode) =
+                    FindReplacementNodeForRemoval(_node.rightNode, _node);
+                if (replacementParentNode != _node)
+                {
+                    replacementParentNode.leftNode = replacementNode.rightNode;
+                    replacementNode.rightNode = _node.rightNode;
+                }
+                replacementNode.leftNode = _node.leftNode;
+                _node = replacementNode;
+                return true;
+            }
+            if (_node.leftNode is not null)
+            {
+                _node = _node.leftNode;
+                return true;
+            }
+            if (_node.rightNode is not null)
+            {
+                _node = _node.rightNode;
+                return true;
+            }
+        }
+
+        if (RemoveFirstNodeWithValue(_node.leftNode, _node, value, true))
+        {
+            return true;
+        }
+        return RemoveFirstNodeWithValue(_node.rightNode, _node, value, false);
     }
 
-    protected override bool RemoveFirstNodeWithValue(Node<T> currentNode, T value)
+    protected override bool RemoveFirstNodeWithValue(
+        Node<T>? currentNode,
+        Node<T> parentNode,
+        T value,
+        bool isLeftNode
+    )
     {
-        return false;
+        if (currentNode is null)
+        {
+            return false;
+        }
+
+        if (currentNode.Value.Equals(value))
+        {
+            Node<T>? replacementNode = null;
+            if (currentNode.HasNoChildNode) { }
+            else if (currentNode.HasTwoChildrenNode)
+            {
+                (replacementNode, Node<T> replacementParentNode) = FindReplacementNodeForRemoval(
+                    currentNode.rightNode,
+                    currentNode
+                );
+                if (replacementParentNode != currentNode)
+                {
+                    replacementParentNode.leftNode = replacementNode.rightNode;
+                    replacementNode.rightNode = currentNode.rightNode;
+                }
+                replacementNode.leftNode = currentNode.leftNode;
+            }
+            else if (currentNode.leftNode is not null)
+            {
+                replacementNode = currentNode.leftNode;
+            }
+            else if (currentNode.rightNode is not null)
+            {
+                replacementNode = currentNode.rightNode;
+            }
+            parentNode.leftNode = isLeftNode ? replacementNode : parentNode.leftNode;
+            parentNode.rightNode = isLeftNode ? parentNode.rightNode : replacementNode;
+            return true;
+        }
+        if (RemoveFirstNodeWithValue(currentNode.leftNode, currentNode, value, true))
+        {
+            return true;
+        }
+        return RemoveFirstNodeWithValue(currentNode.rightNode, currentNode, value, false);
+    }
+
+    protected override (Node<T>, Node<T>) FindReplacementNodeForRemoval(
+        Node<T>? currentNode,
+        Node<T> parent
+    )
+    {
+        if (currentNode is null)
+        {
+            throw new ArgumentException("Cannot find replacement with an empty tree");
+        }
+        if (currentNode.leftNode is not null)
+        {
+            return FindReplacementNodeForRemoval(currentNode.leftNode, currentNode);
+        }
+        return (currentNode, parent);
     }
 }

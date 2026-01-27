@@ -5,11 +5,16 @@ A class to implement nodes of a tree;
 public class Node<T>
     where T : notnull, IComparable<T>
 {
+    #region Main properties
     public T Value;
     public Node<T>? leftNode;
     public Node<T>? rightNode;
+    #endregion
+
+    #region Properties for children
     public bool HasNoChildNode => leftNode is null && rightNode is null;
     public bool HasTwoChildrenNode => leftNode is not null && rightNode is not null;
+    #endregion
 
     public Node(T value)
     {
@@ -34,6 +39,13 @@ public class Node<T>
             return true;
         }
         return false;
+    }
+
+    public void OverwriteValues(Node<T> node)
+    {
+        Value = node.Value;
+        leftNode = node.leftNode;
+        rightNode = node.rightNode;
     }
 
     #region Evaluate Depth of tree

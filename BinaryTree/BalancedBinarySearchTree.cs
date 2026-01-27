@@ -80,18 +80,4 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
         }
         return false;
     }
-
-    public override bool RemoveFirstNodeWithValue(T value)
-    {
-        if (_node is null)
-        {
-            return false;
-        }
-        return RemoveFirstNodeWithValue(_node, value);
-    }
-
-    protected override bool RemoveFirstNodeWithValue(Node<T> currentNode, T value)
-    {
-        return false;
-    }
 }

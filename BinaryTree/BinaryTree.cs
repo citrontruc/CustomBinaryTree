@@ -132,11 +132,51 @@ public class BinaryTree<T>
         {
             return false;
         }
+        if (_node.Value.Equals(value))
+        {
+            if (_node.HasNoChildNode)
+            {
+                _node = null;
+                return true;
+            }
+            if (_node.HasTwoChildrenNode)
+            {
+                (Node<T> replacementNode, Node<T> replacementParentNode) =
+                    FindReplacementNodeForRemoval(_node.rightNode, _node);
+                if (replacementParentNode != _node)
+                {
+                    replacementParentNode.leftNode = replacementNode.rightNode;
+                    replacementNode.rightNode = _node.rightNode;
+                }
+                replacementNode.leftNode = _node.leftNode;
+                _node = replacementNode;
+                return true;
+            }
+            if (_node.leftNode is not null)
+            {
+                _node = _node.leftNode;
+                return true;
+            }
+            if (_node.rightNode is not null)
+            {
+                _node = _node.rightNode;
+                return true;
+            }
+        }
 
-        return RemoveFirstNodeWithValue(_node, value);
+        if (RemoveFirstNodeWithValue(_node.leftNode, _node, value, true))
+        {
+            return true;
+        }
+        return RemoveFirstNodeWithValue(_node.rightNode, _node, value, false);
     }
 
-    protected virtual bool RemoveFirstNodeWithValue(Node<T>? currentNode, T value)
+    protected virtual bool RemoveFirstNodeWithValue(
+        Node<T>? currentNode,
+        Node<T> parentNode,
+        T value,
+        bool isLeftNode
+    )
     {
         if (currentNode is null)
         {
@@ -145,38 +185,44 @@ public class BinaryTree<T>
 
         if (currentNode.Value.Equals(value))
         {
-            if (currentNode.HasNoChildNode)
+            Node<T>? replacementNode = null;
+            if (currentNode.HasNoChildNode) { }
+            else if (currentNode.HasTwoChildrenNode)
             {
-                currentNode = null;
-                return true;
-            }
-            if (currentNode.HasTwoChildrenNode)
-            {
-                Node<T> replacementNode = FindReplacementNodeForRemoval(currentNode.rightNode);
-                replacementNode.rightNode = currentNode.rightNode;
+                (replacementNode, Node<T> replacementParentNode) = FindReplacementNodeForRemoval(
+                    currentNode.rightNode,
+                    currentNode
+                );
+                if (replacementParentNode != currentNode)
+                {
+                    replacementParentNode.leftNode = replacementNode.rightNode;
+                    replacementNode.rightNode = currentNode.rightNode;
+                }
                 replacementNode.leftNode = currentNode.leftNode;
-                currentNode = replacementNode;
-                return true;
             }
-            if (currentNode.leftNode is not null)
+            else if (currentNode.leftNode is not null)
             {
-                currentNode = currentNode.leftNode;
-                return true;
+                replacementNode = currentNode.leftNode;
             }
-            if (currentNode.rightNode is not null)
+            else if (currentNode.rightNode is not null)
             {
-                currentNode = currentNode.rightNode;
-                return true;
+                replacementNode = currentNode.rightNode;
             }
+            parentNode.leftNode = isLeftNode ? replacementNode : parentNode.leftNode;
+            parentNode.rightNode = isLeftNode ? parentNode.rightNode : replacementNode;
+            return true;
         }
-        if (RemoveFirstNodeWithValue(currentNode.leftNode, value))
+        if (RemoveFirstNodeWithValue(currentNode.leftNode, currentNode, value, true))
         {
             return true;
         }
-        return RemoveFirstNodeWithValue(currentNode.rightNode, value);
+        return RemoveFirstNodeWithValue(currentNode.rightNode, currentNode, value, false);
     }
 
-    protected virtual Node<T> FindReplacementNodeForRemoval(Node<T>? currentNode)
+    protected virtual (Node<T>, Node<T>) FindReplacementNodeForRemoval(
+        Node<T>? currentNode,
+        Node<T> parent
+    )
     {
         if (currentNode is null)
         {
@@ -184,42 +230,9 @@ public class BinaryTree<T>
         }
         if (currentNode.leftNode is not null)
         {
-            return FindReplacementNodeForRemoval(currentNode.leftNode);
+            return FindReplacementNodeForRemoval(currentNode.leftNode, currentNode);
         }
-        return currentNode;
-    }
-
-    public Node<T> GetSuccessor(Node<T> currentNode)
-    {
-        return currentNode;
-    }
-
-    /// <summary>
-    /// We take the rightmost, deepest node and use it to replace the node we are going to replace.
-    /// </summary>
-    /// <returns>A boolean indicating if the operation was successful</returns>
-    protected virtual bool TryRemoveValueFromChildNodes(
-        Node<T>? currentNode,
-        Node<T> parent,
-        T value,
-        bool isLeftBranch
-    )
-    {
-        if (currentNode is null)
-        {
-            return false;
-        }
-
-        if (currentNode.Value.CompareTo(value) == 0)
-        {
-            return true;
-        }
-
-        if (currentNode.leftNode is null) { }
-
-        if (currentNode.rightNode is null) { }
-
-        return RemoveFirstNodeWithValue(currentNode, value);
+        return (currentNode, parent);
     }
 
     public List<T> PreOrderTraversal()

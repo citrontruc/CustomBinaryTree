@@ -176,6 +176,7 @@ public class BinaryTreeTest
         Assert.False(isBinarySearchTree);
     }
 
+    #region Contains
     [Fact]
     public void Contains_WhenTheTreeContainsTheValue_ReturnsTrue()
     {
@@ -219,7 +220,95 @@ public class BinaryTreeTest
         // Assert
         Assert.False(containsValue);
     }
+    #endregion
 
+    #region Adding and Removing Nodes
+    [Fact]
+    public void AddNode_AddsNodeToTheTree()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        BinaryTree<int> binaryTree = new(root);
+        int value = 1124;
+
+        // Act
+        binaryTree.AddNode(value);
+
+        // Assert
+        Assert.True(binaryTree.Contains(value));
+    }
+
+    [Fact]
+    public void RemoveFirstNodeWithValue_WhenThereIAreNoNodesWithTheValue_ReturnsFalse()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        BinaryTree<int> binaryTree = new(root);
+        int value = 1124;
+
+        // Act
+        bool hasNodeWithValue = binaryTree.RemoveFirstNodeWithValue(value);
+
+        // Assert
+        Assert.False(hasNodeWithValue);
+    }
+
+    [Fact]
+    public void RemoveFirstNodeWithValue_WhenThereIsOnlyOneNodeWithTheValue_RemovesThisNode()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        BinaryTree<int> binaryTree = new(root);
+        int value = 1124;
+
+        // Act
+        binaryTree.AddNode(value);
+        binaryTree.RemoveFirstNodeWithValue(value);
+
+        // Assert
+        Assert.False(binaryTree.Contains(value));
+    }
+
+    [Fact]
+    public void RemoveFirstNodeWithValue_WhenThereAreMultipleNodesWithTheSameValue_RemovesOnlyOneNode()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        BinaryTree<int> binaryTree = new(root);
+        int value = 1124;
+
+        // Act
+        binaryTree.AddNode(value);
+        binaryTree.AddNode(value);
+        binaryTree.RemoveFirstNodeWithValue(value);
+
+        // Assert
+        Assert.True(binaryTree.Contains(value));
+    }
+
+    [Fact]
+    public void RemoveNode_OnNodeWithTwoChildren_Succeeds()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        root.AddLeft(3);
+        root.AddRight(6);
+        root.rightNode?.AddRight(8);
+        ;
+        root.leftNode?.AddLeft(2);
+        root.leftNode?.AddRight(4);
+        BinaryTree<int> binaryTree = new(root);
+
+        // Act
+        int value = 3;
+        binaryTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(binaryTree.Contains(value));
+    }
+    #endregion
+
+    #region Traversal
     [Fact]
     public void PreOrderTraversal_ReturnsAllNodeFromTheTree_InCorrectOrder()
     {
@@ -303,4 +392,5 @@ public class BinaryTreeTest
         // Assert
         Assert.Equal(expectedResult, listNodeValues);
     }
+    #endregion
 }
