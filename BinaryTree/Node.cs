@@ -35,6 +35,7 @@ public class Node<T>
         return false;
     }
 
+    #region Evaluate Depth of tree
     public int GetMaxDepth()
     {
         int leftDepth = leftNode?.GetMaxDepth() ?? 0;
@@ -68,16 +69,26 @@ public class Node<T>
     {
         return 1 + (leftNode?.GetSize() ?? 0) + (rightNode?.GetSize() ?? 0);
     }
+    #endregion
 
+    #region Default contains method
+    /// <summary>
+    /// The default contains method. It checks every node in the tree.
+    /// Complexity is n.
+    /// </summary>
+    /// <param name="value">Value to check for</param>
+    /// <returns>A boolean indicating if the tree contains the value.</returns>
     public bool Contains(T value)
     {
         if (Value.Equals(value))
         {
             return true;
         }
-        return (leftNode?.Contains(value) ?? false) || (leftNode?.Contains(value) ?? false);
+        return (leftNode?.Contains(value) ?? false) || (rightNode?.Contains(value) ?? false);
     }
+    #endregion
 
+    #region Traversal methods
     public List<T> PreOrderTraversal()
     {
         List<T> result = new();
@@ -150,7 +161,9 @@ public class Node<T>
         }
         return result;
     }
+    #endregion
 
+    #region methods to check Balance of a tree
     public bool IsBalanced()
     {
         return GetMaxDepth() - GetMinDepth() <= 1;
@@ -158,4 +171,5 @@ public class Node<T>
 
     // TODO
     public void BalanceNodes() { }
+    #endregion
 }

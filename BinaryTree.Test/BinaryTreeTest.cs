@@ -175,4 +175,132 @@ public class BinaryTreeTest
         // Assert
         Assert.False(isBinarySearchTree);
     }
+
+    [Fact]
+    public void Contains_WhenTheTreeContainsTheValue_ReturnsTrue()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        root.AddLeft(5);
+        root.AddRight(11);
+        root.rightNode?.AddLeft(-10);
+        root.rightNode?.AddRight(15);
+        root.rightNode?.rightNode?.AddRight(112);
+        root.leftNode?.AddLeft(5);
+        root.leftNode?.AddRight(10);
+        root.leftNode?.leftNode?.AddLeft(1);
+        BinaryTree<int> binaryTree = new(root);
+
+        // Act
+        bool containsValue = binaryTree.Contains(-10);
+
+        // Assert
+        Assert.True(containsValue);
+    }
+
+    [Fact]
+    public void Contains_WhenTheTreeDoesNotContainTheValue_ReturnsFalse()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        root.AddLeft(5);
+        root.AddRight(11);
+        root.rightNode?.AddLeft(-10);
+        root.rightNode?.AddRight(15);
+        root.rightNode?.rightNode?.AddRight(112);
+        root.leftNode?.AddLeft(5);
+        root.leftNode?.AddRight(10);
+        root.leftNode?.leftNode?.AddLeft(1);
+        BinaryTree<int> binaryTree = new(root);
+
+        // Act
+        bool containsValue = binaryTree.Contains(1124);
+
+        // Assert
+        Assert.False(containsValue);
+    }
+
+    [Fact]
+    public void PreOrderTraversal_ReturnsAllNodeFromTheTree_InCorrectOrder()
+    {
+        // Arrange
+        Node<int> root = new(1);
+        root.AddLeft(2);
+        root.AddRight(5);
+        root.rightNode?.AddRight(6);
+        root.rightNode?.rightNode?.AddLeft(7);
+        root.leftNode?.AddLeft(3);
+        root.leftNode?.AddRight(4);
+        BinaryTree<int> binaryTree = new(root);
+        List<int> expectedResult = new() { 1, 2, 3, 4, 5, 6, 7 };
+
+        // Act
+        List<int> listNodeValues = binaryTree.PreOrderTraversal();
+
+        // Assert
+        Assert.Equal(expectedResult, listNodeValues);
+    }
+
+    [Fact]
+    public void PostOrderTraversal_ReturnsAllNodeFromTheTree_InCorrectOrder()
+    {
+        // Arrange
+        Node<int> root = new(7);
+        root.AddLeft(4);
+        root.AddRight(6);
+        root.rightNode?.AddRight(5);
+        root.leftNode?.AddLeft(1);
+        root.leftNode?.AddRight(3);
+        root.leftNode?.rightNode?.AddRight(2);
+        BinaryTree<int> binaryTree = new(root);
+        List<int> expectedResult = new() { 1, 2, 3, 4, 5, 6, 7 };
+
+        // Act
+        List<int> listNodeValues = binaryTree.PostOrderTraversal();
+
+        // Assert
+        Assert.Equal(expectedResult, listNodeValues);
+    }
+
+    [Fact]
+    public void InOrderTraversal_ReturnsAllNodeFromTheTree_InCorrectOrder()
+    {
+        // Arrange
+        Node<int> root = new(4);
+        root.AddLeft(2);
+        root.AddRight(5);
+        root.rightNode?.AddRight(7);
+        root.rightNode?.rightNode?.AddLeft(6);
+        root.leftNode?.AddLeft(1);
+        root.leftNode?.AddRight(3);
+        BinaryTree<int> binaryTree = new(root);
+        List<int> expectedResult = new() { 1, 2, 3, 4, 5, 6, 7 };
+
+        // Act
+        List<int> listNodeValues = binaryTree.InOrderTraversal();
+
+        // Assert
+        Assert.Equal(expectedResult, listNodeValues);
+    }
+
+    [Fact]
+    public void BreadthFirstSearch_ReturnsAllNodeFromTheTree_InCorrectOrder()
+    {
+        // Arrange
+        Node<int> root = new(1);
+        root.AddLeft(2);
+        root.AddRight(3);
+        root.rightNode?.AddRight(6);
+        root.rightNode?.rightNode?.AddLeft(7);
+        root.leftNode?.AddLeft(4);
+        root.leftNode?.AddRight(5);
+        BinaryTree<int> binaryTree = new(root);
+        List<int> expectedResult = new() { 1, 2, 3, 4, 5, 6, 7 };
+
+        // Act
+        List<int> listNodeValues = binaryTree.BreadthFirstSearch();
+
+        // Assert
+        Assert.Equal(expectedResult, listNodeValues);
+    }
 }
