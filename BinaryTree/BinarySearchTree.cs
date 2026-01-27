@@ -5,6 +5,7 @@ A class to implement a binary search tree.
 public class BinarySearchTree<T> : BinaryTree<T>
     where T : notnull, IComparable<T>
 {
+    #region Constructors
     public BinarySearchTree(T value)
         : base(value) { }
 
@@ -18,35 +19,9 @@ public class BinarySearchTree<T> : BinaryTree<T>
             );
         }
     }
+    #endregion
 
-    protected override bool AddNode(Node<T> currentNode, T value)
-    {
-        int comparisonValue = value.CompareTo(currentNode.Value);
-        if ((comparisonValue <= 0) && (currentNode.leftNode is null))
-        {
-            currentNode.leftNode = new(value);
-            return true;
-        }
-
-        if ((comparisonValue > 0) && (currentNode.rightNode is null))
-        {
-            currentNode.rightNode = new(value);
-            return true;
-        }
-
-        if ((comparisonValue <= 0) && (currentNode.leftNode is not null))
-        {
-            return AddNode(currentNode.leftNode, value);
-        }
-
-        if ((comparisonValue > 0) && (currentNode.rightNode is not null))
-        {
-            return AddNode(currentNode.rightNode, value);
-        }
-
-        return false;
-    }
-
+    #region Contains
     public override bool Contains(T value)
     {
         if (_node is null)
@@ -73,6 +48,36 @@ public class BinarySearchTree<T> : BinaryTree<T>
         {
             return Contains(currentNode.rightNode, value);
         }
+        return false;
+    }
+    #endregion
+
+    #region AddNode and RemoveNode
+    protected override bool AddNode(Node<T> currentNode, T value)
+    {
+        int comparisonValue = value.CompareTo(currentNode.Value);
+        if ((comparisonValue <= 0) && (currentNode.leftNode is null))
+        {
+            currentNode.leftNode = new(value);
+            return true;
+        }
+
+        if ((comparisonValue > 0) && (currentNode.rightNode is null))
+        {
+            currentNode.rightNode = new(value);
+            return true;
+        }
+
+        if ((comparisonValue <= 0) && (currentNode.leftNode is not null))
+        {
+            return AddNode(currentNode.leftNode, value);
+        }
+
+        if ((comparisonValue > 0) && (currentNode.rightNode is not null))
+        {
+            return AddNode(currentNode.rightNode, value);
+        }
+
         return false;
     }
 
@@ -190,4 +195,5 @@ public class BinarySearchTree<T> : BinaryTree<T>
         }
         return (currentNode, parent);
     }
+    #endregion
 }

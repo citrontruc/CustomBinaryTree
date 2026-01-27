@@ -5,6 +5,7 @@ A class to implement a binary search tree.
 public class BalancedBinaryTree<T> : BinaryTree<T>
     where T : notnull, IComparable<T>
 {
+    #region Constructors
     public BalancedBinaryTree(T value)
         : base(value) { }
 
@@ -18,7 +19,9 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
             );
         }
     }
+    #endregion
 
+    #region AddNode and RemoveNode
     protected override bool AddNode(Node<T> currentNode, T value)
     {
         if (currentNode is null)
@@ -146,4 +149,5 @@ public class BalancedBinaryTree<T> : BinaryTree<T>
             ? FindReplacementNodeForRemoval(currentNode.leftNode, currentNode, true)
             : FindReplacementNodeForRemoval(currentNode.rightNode, currentNode, false);
     }
+    #endregion
 }

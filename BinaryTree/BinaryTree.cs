@@ -5,8 +5,11 @@ A class to implement a binary tree with search methods.
 public class BinaryTree<T>
     where T : notnull, IComparable<T>
 {
+    #region Properties
     protected Node<T>? _node;
+    #endregion
 
+    #region Constructors
     public BinaryTree(T value)
     {
         _node = new(value);
@@ -16,7 +19,9 @@ public class BinaryTree<T>
     {
         _node = node;
     }
+    #endregion
 
+    #region Getters and Setters
     public Node<T>? GetNode()
     {
         return _node;
@@ -48,7 +53,51 @@ public class BinaryTree<T>
         }
         return _node.GetSize();
     }
+    #endregion
 
+    #region Evaluate tree nature
+    public bool IsBalanced()
+    {
+        if (_node is null)
+        {
+            return true;
+        }
+        return _node.IsBalanced();
+    }
+
+    public bool IsBinarySearchTree()
+    {
+        return IsBinarySearchTree(_node, default, default, false, false);
+    }
+
+    private bool IsBinarySearchTree(
+        Node<T>? currentNode,
+        T? minValue,
+        T? maxValue,
+        bool hasMin,
+        bool hasMax
+    )
+    {
+        if (currentNode is null)
+        {
+            return true;
+        }
+
+        if (hasMin && (minValue?.CompareTo(currentNode.Value) > 0))
+        {
+            return false;
+        }
+
+        if (hasMax && (maxValue?.CompareTo(currentNode.Value) < 0))
+        {
+            return false;
+        }
+        return IsBinarySearchTree(currentNode.leftNode, minValue, currentNode.Value, hasMin, true)
+            && IsBinarySearchTree(currentNode.rightNode, currentNode.Value, maxValue, true, hasMax);
+    }
+    #endregion
+
+    #region Contains methods
     /// <summary>
     /// Checks if a tree contains the given value.
     /// Uses a recursive technique.
@@ -93,7 +142,9 @@ public class BinaryTree<T>
 
         return false;
     }
+    #endregion
 
+    #region AddNodes and RemoveNodes
     /// <summary>
     /// By default, if we have a free branch, we add our node.
     /// If we don't, we pass on the value to the left branch.
@@ -234,7 +285,9 @@ public class BinaryTree<T>
         }
         return (currentNode, parent);
     }
+    #endregion
 
+    #region Traversal methods
     public List<T> PreOrderTraversal()
     {
         if (_node is null)
@@ -270,49 +323,5 @@ public class BinaryTree<T>
         }
         return _node.BreadthFirstSearch();
     }
-
-    public bool IsBalanced()
-    {
-        if (_node is null)
-        {
-            return true;
-        }
-        return _node.IsBalanced();
-    }
-
-    public bool IsBinarySearchTree()
-    {
-        return IsBinarySearchTree(_node, default, default, false, false);
-    }
-
-    private bool IsBinarySearchTree(
-        Node<T>? currentNode,
-        T? minValue,
-        T? maxValue,
-        bool hasMin,
-        bool hasMax
-    )
-    {
-        if (currentNode is null)
-        {
-            return true;
-        }
-
-        if (hasMin && (minValue?.CompareTo(currentNode.Value) > 0))
-        {
-            return false;
-        }
-
-        if (hasMax && (maxValue?.CompareTo(currentNode.Value) < 0))
-        {
-            return false;
-        }
-        return IsBinarySearchTree(currentNode.leftNode, minValue, currentNode.Value, hasMin, true)
-            && IsBinarySearchTree(currentNode.rightNode, currentNode.Value, maxValue, true, hasMax);
-    }
-
-    public int? CompareTo(T? other)
-    {
-        return _node?.Value.CompareTo(other);
-    }
+    #endregion
 }

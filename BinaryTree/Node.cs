@@ -16,11 +16,14 @@ public class Node<T>
     public bool HasTwoChildrenNode => leftNode is not null && rightNode is not null;
     #endregion
 
+    #region Constructor
     public Node(T value)
     {
         Value = value;
     }
+    #endregion
 
+    #region Getters and setters
     public bool AddLeft(T value)
     {
         if (leftNode is null)
@@ -40,13 +43,7 @@ public class Node<T>
         }
         return false;
     }
-
-    public void OverwriteValues(Node<T> node)
-    {
-        Value = node.Value;
-        leftNode = node.leftNode;
-        rightNode = node.rightNode;
-    }
+    #endregion
 
     #region Evaluate Depth of tree
     public int GetMaxDepth()
@@ -182,7 +179,12 @@ public class Node<T>
         return GetMaxDepth() - GetMinDepth() <= 1;
     }
 
-    // TODO
-    public void BalanceNodes() { }
+    public void BalanceNodes()
+    {
+        if (IsBalanced())
+        {
+            return;
+        }
+    }
     #endregion
 }

@@ -4,6 +4,7 @@ A script to do tests on our implementation of binary trees.
 
 public class BinaryTreeTest
 {
+    #region Getters
     [Fact]
     public void GetNode_WithOneNode_LetsYouGetTheNode()
     {
@@ -60,7 +61,9 @@ public class BinaryTreeTest
         // Assert
         Assert.Equal(2, maxDepth);
     }
+    #endregion
 
+    #region Tree types evaluation
     [Fact]
     public void IsBalanced_WithAnUnbalancedTree_ReturnsFalse()
     {
@@ -175,6 +178,7 @@ public class BinaryTreeTest
         // Assert
         Assert.False(isBinarySearchTree);
     }
+    #endregion
 
     #region Contains
     [Fact]

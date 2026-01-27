@@ -4,6 +4,7 @@ A script to do our tests on our implementation of binary balanced trees.
 
 public class BalancedBinarySearchTreeTest
 {
+    #region Constructor
     [Fact]
     public void BalancedBinaryTree_WithFaultyNodes_ThrowsException()
     {
@@ -45,8 +46,9 @@ public class BalancedBinarySearchTreeTest
         // Arrange
         Assert.True(balancedBinaryTree.IsBalanced());
     }
+    #endregion
 
-    /*
+    #region Balanced and search properties evaluated after nodes are added
     [Theory]
     [InlineData(2)]
     [InlineData(3)]
@@ -54,17 +56,19 @@ public class BalancedBinarySearchTreeTest
     public void GetMaxDepth_InABalancedBinaryTree_ReturnsTheCorrectValue(int maxDepth)
     {
         // Arrange
-        BalancedBinaryTree<string> binaryTree = new("test");
+        BalancedBinarySearchTree<string> binaryTree = new("test");
+
+        // Act
         for (int i = 1; i < Math.Pow(2, maxDepth) + 1; i++)
         {
             binaryTree.AddNode("test");
         }
-
-        // Act
         int maxDepthTree = binaryTree.GetMaxDepth();
+        bool isBinarySearchTree = binaryTree.IsBinarySearchTree();
 
         // Assert
         Assert.Equal(maxDepth + 1, maxDepthTree);
+        Assert.True(isBinarySearchTree);
     }
 
     [Theory]
@@ -74,17 +78,19 @@ public class BalancedBinarySearchTreeTest
     public void GetMinDepth_InABalancedBinaryTree_ReturnsTheCorrectValue(int minDepth)
     {
         // Arrange
-        BalancedBinaryTree<string> binaryTree = new("test");
+        BalancedBinarySearchTree<string> binaryTree = new("test");
+
+        // Act
         for (int i = 1; i < Math.Pow(2, minDepth) - 1; i++)
         {
             binaryTree.AddNode("test");
         }
-
-        // Act
         int minDepthTree = binaryTree.GetMaxDepth();
+        bool isBinarySearchTree = binaryTree.IsBinarySearchTree();
 
         // Assert
         Assert.Equal(minDepth, minDepthTree);
+        Assert.True(isBinarySearchTree);
     }
 
     [Theory]
@@ -95,16 +101,113 @@ public class BalancedBinarySearchTreeTest
     public void IsBalanced_ForAnyNumberOfInsertions_ReturnsTrue(int numberNodes)
     {
         // Arrange
-        BalancedBinaryTree<string> binaryTree = new("test");
+        BalancedBinarySearchTree<string> binaryTree = new("test");
+
+        // Act
         for (int i = 1; i < numberNodes; i++)
         {
             binaryTree.AddNode("test");
         }
-
-        // Act
         bool isBalanced = binaryTree.IsBalanced();
+        bool isBinarySearchTree = binaryTree.IsBinarySearchTree();
 
         // Assert
         Assert.True(isBalanced);
-    }*/
+        Assert.True(isBinarySearchTree);
+    }
+    #endregion
+
+    #region RemoveNode
+    [Fact]
+    public void RemoveNode_OnNodeWithTwoChildren_RemainsBinarySearchTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BalancedBinarySearchTree<int> binarySearchTree = new(root);
+        binarySearchTree.AddNode(3);
+        binarySearchTree.AddNode(4);
+        binarySearchTree.AddNode(2);
+        binarySearchTree.AddNode(6);
+        binarySearchTree.AddNode(8);
+        binarySearchTree.AddNode(7);
+
+        // Act
+        int value = 3;
+        binarySearchTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(binarySearchTree.Contains(value));
+        Assert.True(binarySearchTree.IsBinarySearchTree());
+        Assert.True(binarySearchTree.IsBalanced());
+    }
+
+    [Fact]
+    public void RemoveNode_OnNodeWithOnlyRightChild_RemainsBinarySearchTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BalancedBinarySearchTree<int> binarySearchTree = new(root);
+        binarySearchTree.AddNode(3);
+        binarySearchTree.AddNode(4);
+        binarySearchTree.AddNode(2);
+        binarySearchTree.AddNode(6);
+        binarySearchTree.AddNode(8);
+        binarySearchTree.AddNode(7);
+
+        // Act
+        int value = 6;
+        binarySearchTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(binarySearchTree.Contains(value));
+        Assert.True(binarySearchTree.IsBinarySearchTree());
+        Assert.True(binarySearchTree.IsBalanced());
+    }
+
+    [Fact]
+    public void RemoveNode_OnNodeWithOnlyLeftChild_RemainsBinarySearchTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BalancedBinarySearchTree<int> binarySearchTree = new(root);
+        binarySearchTree.AddNode(3);
+        binarySearchTree.AddNode(4);
+        binarySearchTree.AddNode(2);
+        binarySearchTree.AddNode(6);
+        binarySearchTree.AddNode(8);
+        binarySearchTree.AddNode(7);
+
+        // Act
+        int value = 8;
+        binarySearchTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(binarySearchTree.Contains(value));
+        Assert.True(binarySearchTree.IsBinarySearchTree());
+        Assert.True(binarySearchTree.IsBalanced());
+    }
+
+    [Fact]
+    public void RemoveNode_OnRoot_RemainsBinarySearchTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BalancedBinarySearchTree<int> binarySearchTree = new(root);
+        binarySearchTree.AddNode(3);
+        binarySearchTree.AddNode(4);
+        binarySearchTree.AddNode(2);
+        binarySearchTree.AddNode(6);
+        binarySearchTree.AddNode(8);
+        binarySearchTree.AddNode(7);
+
+        // Act
+        int value = 5;
+        binarySearchTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(binarySearchTree.Contains(value));
+        Assert.True(binarySearchTree.IsBinarySearchTree());
+        Assert.True(binarySearchTree.IsBalanced());
+    }
+    #endregion
 }

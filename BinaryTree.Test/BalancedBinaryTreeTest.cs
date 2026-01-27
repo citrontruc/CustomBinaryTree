@@ -4,6 +4,7 @@ A script to do our tests on our implementation of binary balanced trees.
 
 public class BalancedBinaryTreeTest
 {
+    #region Constructors
     [Fact]
     public void BalancedBinaryTree_WithFaultyNodes_ThrowsException()
     {
@@ -45,7 +46,9 @@ public class BalancedBinaryTreeTest
         // Arrange
         Assert.True(balancedBinaryTree.IsBalanced());
     }
+    #endregion
 
+    #region Depth evaluation when nodes are added
     [Theory]
     [InlineData(2)]
     [InlineData(3)]
@@ -54,12 +57,12 @@ public class BalancedBinaryTreeTest
     {
         // Arrange
         BalancedBinaryTree<string> binaryTree = new("test");
+
+        // Act
         for (int i = 1; i < Math.Pow(2, maxDepth) + 1; i++)
         {
             binaryTree.AddNode("test");
         }
-
-        // Act
         int maxDepthTree = binaryTree.GetMaxDepth();
 
         // Assert
@@ -74,12 +77,12 @@ public class BalancedBinaryTreeTest
     {
         // Arrange
         BalancedBinaryTree<string> binaryTree = new("test");
+
+        // Act
         for (int i = 1; i < Math.Pow(2, minDepth) - 1; i++)
         {
             binaryTree.AddNode("test");
         }
-
-        // Act
         int minDepthTree = binaryTree.GetMaxDepth();
 
         // Assert
@@ -95,19 +98,20 @@ public class BalancedBinaryTreeTest
     {
         // Arrange
         BalancedBinaryTree<string> binaryTree = new("test");
+
+        // Act
         for (int i = 1; i < numberNodes; i++)
         {
             binaryTree.AddNode("test");
         }
-
-        // Act
         bool isBalanced = binaryTree.IsBalanced();
 
         // Assert
         Assert.True(isBalanced);
     }
+    #endregion
 
-    #region RemoveNode
+    #region Depth evaluation when nodes are removed
     [Fact]
     public void RemoveNode_OnNodeWithTwoChildren_RemainsBinaryBalancedTree()
     {
