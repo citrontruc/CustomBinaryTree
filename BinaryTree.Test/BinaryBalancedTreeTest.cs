@@ -1,9 +1,52 @@
 /*
 A script to do our tests on our implementation of binary balanced trees.
 */
-/*
+
 public class BinaryBalancedTreeTest
 {
+    [Fact]
+    public void BalancedBinaryTree_WithFaultyNodes_ThrowsException()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        root.AddLeft(5);
+        root.AddRight(15);
+        root.rightNode?.AddLeft(11);
+        root.rightNode?.AddLeft(13);
+        root.rightNode?.leftNode?.AddRight(14);
+        root.leftNode?.AddLeft(5);
+        root.leftNode?.AddRight(8);
+        root.leftNode?.leftNode?.AddLeft(1);
+
+        // Act
+        Action createBalancedSearchTree = () => new BalancedBinaryTree<int>(root);
+
+        // Arrange
+        Assert.Throws<ArgumentException>(createBalancedSearchTree);
+    }
+
+    [Fact]
+    public void BinarySearchTree_WithCorrectNodes_ThrowsNoException()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        root.AddLeft(5);
+        root.AddRight(15);
+        root.rightNode?.AddLeft(11);
+        root.rightNode?.AddLeft(13);
+        root.rightNode?.AddRight(16);
+        root.leftNode?.AddLeft(5);
+        root.leftNode?.AddRight(8);
+        root.leftNode?.leftNode?.AddLeft(1);
+
+        // Act
+        BinarySearchTree<int> balancedBinaryTree = new(root);
+
+        // Arrange
+        Assert.True(balancedBinaryTree.IsBalanced());
+    }
+
+    /*
     [Theory]
     [InlineData(2)]
     [InlineData(3)]
@@ -63,5 +106,5 @@ public class BinaryBalancedTreeTest
 
         // Assert
         Assert.True(isBalanced);
-    }
-}*/
+    }*/
+}

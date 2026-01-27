@@ -8,6 +8,17 @@ public class BalancedBinaryTree<T> : BinarySearchTree<T>
     public BalancedBinaryTree(T value)
         : base(value) { }
 
+    public BalancedBinaryTree(Node<T> node)
+        : base(node)
+    {
+        if (!IsBalanced())
+        {
+            throw new ArgumentException(
+                "The provided node do not follow a balanced binary search tree structure."
+            );
+        }
+    }
+
     /// <summary>
     /// By default, we will try to insert values on the smallest branch.
     /// </summary>

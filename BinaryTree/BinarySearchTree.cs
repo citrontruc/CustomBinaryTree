@@ -8,6 +8,17 @@ public class BinarySearchTree<T> : BinaryTree<T>
     public BinarySearchTree(T value)
         : base(value) { }
 
+    public BinarySearchTree(Node<T> node)
+        : base(node)
+    {
+        if (!IsBinarySearchTree())
+        {
+            throw new ArgumentException(
+                "The provided node do not follow a binary search tree structure."
+            );
+        }
+    }
+
     protected override bool AddNode(Node<T> currentNode, T value)
     {
         int comparisonValue = value.CompareTo(currentNode.Value);
