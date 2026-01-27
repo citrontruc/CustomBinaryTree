@@ -36,5 +36,11 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
         return result;
     }
 
-    public void Rebalance() { }
+    public void Rebalance()
+    {
+        if (IsBalanced())
+        {
+            return;
+        }
+    }
 }

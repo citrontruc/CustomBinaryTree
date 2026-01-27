@@ -160,5 +160,27 @@ public class BinarySearchTreeTest
         Assert.False(binarySearchTree.Contains(value));
         Assert.True(binarySearchTree.IsBinarySearchTree());
     }
+
+    [Fact]
+    public void RemoveNode_OnRoot_RemainsBinarySearchTree()
+    {
+        // Arrange
+        Node<int> root = new(5);
+        BinarySearchTree<int> binarySearchTree = new(root);
+        binarySearchTree.AddNode(3);
+        binarySearchTree.AddNode(4);
+        binarySearchTree.AddNode(2);
+        binarySearchTree.AddNode(6);
+        binarySearchTree.AddNode(8);
+        binarySearchTree.AddNode(7);
+
+        // Act
+        int value = 5;
+        binarySearchTree.RemoveFirstNodeWithValue(value);
+
+        // Arrange
+        Assert.False(binarySearchTree.Contains(value));
+        Assert.True(binarySearchTree.IsBinarySearchTree());
+    }
     #endregion
 }
