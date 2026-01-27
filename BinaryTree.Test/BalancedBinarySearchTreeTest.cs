@@ -2,7 +2,7 @@
 A script to do our tests on our implementation of binary balanced trees.
 */
 
-public class BinaryBalancedTreeTest
+public class BalancedBinarySearchTreeTest
 {
     [Fact]
     public void BalancedBinaryTree_WithFaultyNodes_ThrowsException()
@@ -19,14 +19,14 @@ public class BinaryBalancedTreeTest
         root.leftNode?.leftNode?.AddLeft(1);
 
         // Act
-        Action createBalancedSearchTree = () => new BalancedBinaryTree<int>(root);
+        Action createBalancedSearchTree = () => new BalancedBinarySearchTree<int>(root);
 
         // Arrange
         Assert.Throws<ArgumentException>(createBalancedSearchTree);
     }
 
     [Fact]
-    public void BinarySearchTree_WithCorrectNodes_ThrowsNoException()
+    public void BalancedBinarySearchTree_WithCorrectNodes_ThrowsNoException()
     {
         // Arrange
         Node<int> root = new(9);
@@ -40,7 +40,7 @@ public class BinaryBalancedTreeTest
         root.leftNode?.leftNode?.AddLeft(1);
 
         // Act
-        BinarySearchTree<int> balancedBinaryTree = new(root);
+        BalancedBinarySearchTree<int> balancedBinaryTree = new(root);
 
         // Arrange
         Assert.True(balancedBinaryTree.IsBalanced());

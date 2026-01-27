@@ -11,10 +11,10 @@ public class BinaryTreeTest
         BinaryTree<string> binaryTree = new("test");
 
         // Act
-        Node<string> node = binaryTree.GetNode();
+        Node<string>? node = binaryTree.GetNode();
 
         // Assert
-        Assert.Equal("test", node.Value);
+        Assert.Equal("test", node?.Value);
     }
 
     [Fact]

@@ -1,24 +1,29 @@
 /*
-A class to implement a binary search tree.
+A class to implement Balanced binary search trees from Binary search trees.
 */
 
-public class BinarySearchTree<T> : BinaryTree<T>
+public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
     where T : notnull, IComparable<T>
 {
-    public BinarySearchTree(T value)
+    public BalancedBinarySearchTree(T value)
         : base(value) { }
 
-    public BinarySearchTree(Node<T> node)
+    public BalancedBinarySearchTree(Node<T> node)
         : base(node)
     {
-        if (!IsBinarySearchTree())
+        if (!IsBalanced())
         {
             throw new ArgumentException(
-                "The provided node do not follow a binary search tree structure."
+                "The provided node do not follow a balanced binary search tree structure."
             );
         }
     }
 
+    /// <summary>
+    /// By default, we will try to insert values on the smallest branch.
+    /// </summary>
+    /// <param name="value">value to insert in our binary tree</param>
+    /// <returns>A boolean to indicate if the operation was successful.</returns>
     protected override bool AddNode(Node<T> currentNode, T value)
     {
         int comparisonValue = value.CompareTo(currentNode.Value);

@@ -9,6 +9,7 @@ public class Node<T>
     public Node<T>? leftNode;
     public Node<T>? rightNode;
     public bool HasNoChildNode => leftNode is null && rightNode is null;
+    public bool HasTwoChildrenNode => leftNode is not null && rightNode is not null;
 
     public Node(T value)
     {
