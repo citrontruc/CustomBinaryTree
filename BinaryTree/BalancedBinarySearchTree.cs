@@ -43,11 +43,71 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
     #region Balance Nodes
     /// <summary>
     /// A first approach to rebalance would be to recreate the tree from an in order traversal.
-    /// This approach has high complexity. We would rather modify the tree in place.
+    /// This approach has high complexity but works quite well.
     /// </summary>
     public void BalanceNodes()
     {
-        _node?.BalanceNodes();
+        if (_node is null || IsBalanced())
+        {
+            return;
+        }
+
+        List<T> allNodeValues = InOrderTraversal();
+        Node<T> vine = new(allNodeValues[0]); // Dummy node
+        Node<T>? currentNode = vine;
+        for (int i = 0; i < allNodeValues.Count(); i++)
+        {
+            currentNode?.AddRight(allNodeValues[i]);
+            currentNode = currentNode?.rightNode;
+        }
+        int nodeCount = GetSize();
+        int maxDepthForBalancedTree = (int)Math.Pow(2, Math.Floor(Math.Log2(nodeCount + 1))) - 1;
+        int leavesToCreate = nodeCount - maxDepthForBalancedTree;
+
+        RotateNodes(vine, leavesToCreate);
+
+        int nodesToRotate = maxDepthForBalancedTree;
+        while (nodesToRotate > 1)
+        {
+            nodesToRotate /= 2;
+            RotateNodes(vine, nodesToRotate);
+        }
+
+        _node = vine.rightNode; // Skip dummy root
+        vine.rightNode = null;
+    }
+
+    private void LeftRotate(Node<T> node, Node<T> parent)
+    {
+        parent.rightNode = node.leftNode;
+        node.leftNode = parent;
+    }
+
+    private void RightRotate(Node<T> node, Node<T> parent)
+    {
+        parent.leftNode = node.rightNode;
+        node.rightNode = parent;
+    }
+
+    private void RotateNodes(Node<T> dummyRoot, int numberOfRotations)
+    {
+        Node<T> currentNode = dummyRoot;
+
+        for (int i = 0; i < numberOfRotations; i++)
+        {
+            if (currentNode.rightNode?.rightNode == null)
+                return;
+
+            Node<T> parent = currentNode.rightNode;
+            Node<T> child = parent.rightNode;
+
+            // Perform left rotation
+            LeftRotate(child, parent);
+            currentNode.rightNode = child;
+
+            // Move down the vine
+            currentNode = child;
+        }
     }
     #endregion
 }

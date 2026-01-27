@@ -178,13 +178,5 @@ public class Node<T>
     {
         return GetMaxDepth() - GetMinDepth() <= 1;
     }
-
-    public void BalanceNodes()
-    {
-        if (IsBalanced())
-        {
-            return;
-        }
-    }
     #endregion
 }
