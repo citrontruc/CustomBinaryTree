@@ -2,6 +2,7 @@
 A class to implement Balanced binary search trees from Binary search trees.
 */
 
+//TODO
 public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
     where T : notnull, IComparable<T>
 {
@@ -19,65 +20,21 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
         }
     }
 
-    /// <summary>
-    /// By default, we will try to insert values on the smallest branch.
-    /// </summary>
-    /// <param name="value">value to insert in our binary tree</param>
-    /// <returns>A boolean to indicate if the operation was successful.</returns>
     protected override bool AddNode(Node<T> currentNode, T value)
     {
-        int comparisonValue = value.CompareTo(currentNode.Value);
-        if ((comparisonValue <= 0) && (currentNode.leftNode is null))
-        {
-            currentNode.leftNode = new(value);
-            return true;
-        }
+        bool result = base.AddNode(currentNode, value);
+        Rebalance();
 
-        if ((comparisonValue > 0) && (currentNode.rightNode is null))
-        {
-            currentNode.rightNode = new(value);
-            return true;
-        }
-
-        if ((comparisonValue <= 0) && (currentNode.leftNode is not null))
-        {
-            return AddNode(currentNode.leftNode, value);
-        }
-
-        if ((comparisonValue > 0) && (currentNode.rightNode is not null))
-        {
-            return AddNode(currentNode.rightNode, value);
-        }
-
-        return false;
+        return result;
     }
 
-    public override bool Contains(T value)
+    public override bool RemoveFirstNodeWithValue(T value)
     {
-        if (_node is null)
-        {
-            return false;
-        }
-        return Contains(_node, value);
+        bool result = base.RemoveFirstNodeWithValue(value);
+        Rebalance();
+
+        return result;
     }
 
-    private bool Contains(Node<T> currentNode, T value)
-    {
-        int comparisonValue = currentNode.Value.CompareTo(value);
-        if (comparisonValue == 0)
-        {
-            return true;
-        }
-
-        if (comparisonValue < 0 && currentNode.leftNode is not null)
-        {
-            return Contains(currentNode.leftNode, value);
-        }
-
-        if (comparisonValue > 0 && currentNode.rightNode is not null)
-        {
-            return Contains(currentNode.rightNode, value);
-        }
-        return false;
-    }
+    public void Rebalance() { }
 }

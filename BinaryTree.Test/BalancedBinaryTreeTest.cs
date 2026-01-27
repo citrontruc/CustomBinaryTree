@@ -46,7 +46,6 @@ public class BalancedBinaryTreeTest
         Assert.True(balancedBinaryTree.IsBalanced());
     }
 
-    /*
     [Theory]
     [InlineData(2)]
     [InlineData(3)]
@@ -106,5 +105,5 @@ public class BalancedBinaryTreeTest
 
         // Assert
         Assert.True(isBalanced);
-    }*/
+    }
 }

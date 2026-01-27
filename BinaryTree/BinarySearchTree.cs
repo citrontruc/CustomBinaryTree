@@ -76,6 +76,11 @@ public class BinarySearchTree<T> : BinaryTree<T>
         return false;
     }
 
+    /// <summary>
+    /// If the node to remove has two children nodes we take the leftmost node of the right child node.
+    /// </summary>
+    /// <param name="value">Value to remove</param>
+    /// <returns>A boolean indicating if the operation succeeded.</returns>
     public override bool RemoveFirstNodeWithValue(T value)
     {
         if (_node is null)
@@ -114,9 +119,9 @@ public class BinarySearchTree<T> : BinaryTree<T>
             }
         }
 
-        if (RemoveFirstNodeWithValue(_node.leftNode, _node, value, true))
+        if (_node.Value.CompareTo(value) >= 0)
         {
-            return true;
+            return RemoveFirstNodeWithValue(_node.leftNode, _node, value, true);
         }
         return RemoveFirstNodeWithValue(_node.rightNode, _node, value, false);
     }
@@ -162,9 +167,10 @@ public class BinarySearchTree<T> : BinaryTree<T>
             parentNode.rightNode = isLeftNode ? parentNode.rightNode : replacementNode;
             return true;
         }
-        if (RemoveFirstNodeWithValue(currentNode.leftNode, currentNode, value, true))
+
+        if (currentNode.Value.CompareTo(value) >= 0)
         {
-            return true;
+            return RemoveFirstNodeWithValue(currentNode.leftNode, currentNode, value, true);
         }
         return RemoveFirstNodeWithValue(currentNode.rightNode, currentNode, value, false);
     }
