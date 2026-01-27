@@ -36,6 +36,10 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
         return result;
     }
 
+    /// <summary>
+    /// A first approach to rebalance would be to recreate the tree from an in order traversal.
+    /// This approach has high complexity. We would rather modify the tree in place.
+    /// </summary>
     public void Rebalance()
     {
         if (IsBalanced())
