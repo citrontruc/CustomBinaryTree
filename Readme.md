@@ -32,4 +32,4 @@ All trees have the following methods:
 - IsBalanced(): checks if tree is balanced.
 - IsBinarySearchTree(): checks if tree is a binary search tree.
 
-Have a great day :smiley:
+Have a great day :smiley:!
