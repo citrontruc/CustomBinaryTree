@@ -117,6 +117,27 @@ public class BalancedBinarySearchTreeTest
     }
     #endregion
 
+    #region Addnode
+    [Fact]
+    public void AddNode_OnBalancedBinarySearchTree_PlacesNodeAsBinarySearchTree()
+    {
+        // Arrange
+        Node<int> root = new(9);
+
+        // Act
+        BalancedBinarySearchTree<int> balancedBinarySearchTree = new(root);
+        balancedBinarySearchTree.AddNode(1124);
+        balancedBinarySearchTree.AddNode(2);
+        balancedBinarySearchTree.AddNode(-1);
+        balancedBinarySearchTree.AddNode(3);
+        List<int> listResult = balancedBinarySearchTree.InOrderTraversal();
+        List<int> ExpectedResult = new() { -1, 2, 3, 9, 1124 };
+
+        // Arrange
+        Assert.Equal(ExpectedResult, listResult);
+    }
+    #endregion
+
     #region RemoveNode
     [Fact]
     public void RemoveNode_OnNodeWithTwoChildren_RemainsBinarySearchTree()

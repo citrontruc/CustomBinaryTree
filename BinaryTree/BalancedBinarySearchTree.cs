@@ -44,6 +44,7 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
     /// <summary>
     /// A first approach to rebalance would be to recreate the tree from an in order traversal.
     /// This approach has high complexity but works quite well.
+    /// It follows the Day Stouts Warren Algorithm. https://en.wikipedia.org/wiki/Day%E2%80%93Stout%E2%80%93Warren_algorithm
     /// </summary>
     public void BalanceNodes()
     {
@@ -53,7 +54,8 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
         }
 
         List<T> allNodeValues = InOrderTraversal();
-        Node<T> vine = new(allNodeValues[0]); // Dummy node
+        Node<T> vine = new(allNodeValues[0]); // Dummy node Set it to any value.
+        // We start by building a large linked list from our nodes.
         Node<T>? currentNode = vine;
         for (int i = 0; i < allNodeValues.Count(); i++)
         {
@@ -64,6 +66,7 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
         int maxDepthForBalancedTree = (int)Math.Pow(2, Math.Floor(Math.Log2(nodeCount + 1))) - 1;
         int leavesToCreate = nodeCount - maxDepthForBalancedTree;
 
+        // We then repeatedly rotate the first node.
         RotateNodes(vine, leavesToCreate);
 
         int nodesToRotate = maxDepthForBalancedTree;
@@ -73,7 +76,7 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
             RotateNodes(vine, nodesToRotate);
         }
 
-        _node = vine.rightNode; // Skip dummy root
+        _node = vine.rightNode; // Skip dummy root that was introduced previously.
         vine.rightNode = null;
     }
 
@@ -101,7 +104,6 @@ public class BalancedBinarySearchTree<T> : BinarySearchTree<T>
             Node<T> parent = currentNode.rightNode;
             Node<T> child = parent.rightNode;
 
-            // Perform left rotation
             LeftRotate(child, parent);
             currentNode.rightNode = child;
 
