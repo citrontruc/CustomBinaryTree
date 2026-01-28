@@ -4,6 +4,8 @@ A project to implement a binary search tree and implement tree search methods.
 
 ## Content
 
+### Trees
+
 Code for the implementation of trees is stored in the BinaryTree folder.
 
 The project has four different types of trees:
@@ -16,6 +18,10 @@ The project has four different types of trees:
 All operations (adding nodes, removing nodes) must protect the relationship.
 
 Tests are stored in the BinaryTree.Test folder.
+
+### Bonus Content
+
+In order to try out Trees in practice, the repo also contains a set of methods to find if elements from a list are in a secondlist. One of the methods uses trees.
 
 ## Available methods
 

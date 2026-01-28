@@ -39,12 +39,12 @@ public class BinarySearchTree<T> : BinaryTree<T>
             return true;
         }
 
-        if (comparisonValue < 0 && currentNode.leftNode is not null)
+        if (comparisonValue > 0 && currentNode.leftNode is not null)
         {
             return Contains(currentNode.leftNode, value);
         }
 
-        if (comparisonValue > 0 && currentNode.rightNode is not null)
+        if (comparisonValue < 0 && currentNode.rightNode is not null)
         {
             return Contains(currentNode.rightNode, value);
         }

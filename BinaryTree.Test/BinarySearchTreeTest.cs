@@ -94,6 +94,50 @@ public class BinarySearchTreeTest
     }
     #endregion
 
+    [Fact]
+    public void Contains_WhenTheTreeContainsTheValue_ReturnsTrue()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        BinarySearchTree<int> binaryTree = new(root);
+        binaryTree.AddNode(5);
+        binaryTree.AddNode(11);
+        binaryTree.AddNode(-10);
+        binaryTree.AddNode(15);
+        binaryTree.AddNode(112);
+        binaryTree.AddNode(5);
+        binaryTree.AddNode(10);
+        binaryTree.AddNode(1);
+
+        // Act
+        bool containsValue = binaryTree.Contains(-10);
+
+        // Assert
+        Assert.True(containsValue);
+    }
+
+    [Fact]
+    public void Contains_WhenTheTreeDoesNotContainTheValue_ReturnsFalse()
+    {
+        // Arrange
+        Node<int> root = new(9);
+        BinaryTree<int> binaryTree = new(root);
+        binaryTree.AddNode(5);
+        binaryTree.AddNode(11);
+        binaryTree.AddNode(-10);
+        binaryTree.AddNode(15);
+        binaryTree.AddNode(112);
+        binaryTree.AddNode(5);
+        binaryTree.AddNode(10);
+        binaryTree.AddNode(1);
+
+        // Act
+        bool containsValue = binaryTree.Contains(1124);
+
+        // Assert
+        Assert.False(containsValue);
+    }
+
     #region RemoveNode
     [Fact]
     public void RemoveNode_OnNodeWithTwoChildren_RemainsBinarySearchTree()
