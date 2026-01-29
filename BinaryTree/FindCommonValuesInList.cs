@@ -16,18 +16,18 @@ public static class ListComparer
     public static List<T> CompareWithDict<T>(List<T> firstList, List<T> secondList)
         where T : IComparable<T>
     {
-        Dictionary<T, bool> comparisonDict = new();
+        HashSet<T> comparisonHashSet = new();
         List<T> result = new();
 
         for (int i = 0; i < firstList.Count(); i++)
         {
-            comparisonDict[firstList[i]] = true;
+            comparisonHashSet.Add(firstList[i]);
         }
 
         List<T> distinctSecondListValues = secondList.Distinct().ToList();
         for (int i = 0; i < distinctSecondListValues.Count(); i++)
         {
-            if (comparisonDict.TryGetValue(distinctSecondListValues[i], out _))
+            if (comparisonHashSet.TryGetValue(distinctSecondListValues[i], out _))
             {
                 result.Add(secondList[i]);
             }
